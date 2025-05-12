@@ -24,6 +24,8 @@ def redirect_to_url(short_url):
 @shortener.route('/create_link', methods=['POST'])
 def create_link():
     original_url = request.form['original_url']
+    custom_id = request.form['custom_id']
+ 
     if not original_url:
         flash("Original URL cannot be empty.", "error")
         return redirect('/')
@@ -31,7 +33,15 @@ def create_link():
         flash("Invalid URL", "error")
         return redirect('/')
 
-    link = Link(original_url=original_url)
+    if custom_id:
+        if Link.query.filter_by(short_url=custom_id).first():
+            flash("Custom ID is already in use. Please choose another.", "error")
+            return redirect('/')
+        short_url = custom_id
+    else:
+        short_url = None 
+
+    link = Link(original_url=original_url, short_url=short_url)
 
     db.session.add(link)
     db.session.commit()

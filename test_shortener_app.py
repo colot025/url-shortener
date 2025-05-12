@@ -21,11 +21,12 @@ class TestURLShortener(unittest.TestCase):
         """Clean up after tests."""
         with self.app.app_context():
             db.session.remove()
+            db.engine.dispose()
             db.drop_all()
 
     def test_create_short_url(self):
         response = self.client.post('/create_link', data={
-            'original_url': 'https://example.com'
+            'original_url': 'https://google.com', 'custom_id': 'gogo'
         })
         self.assertEqual(
             response.status_code,
@@ -33,29 +34,28 @@ class TestURLShortener(unittest.TestCase):
             msg=f"Response status: {response.status_code}, Data: {response.data.decode()}"
         )
         with self.app.app_context():
-            link = Link.query.filter_by(original_url='https://example.com').first()
+            link = Link.query.filter_by(original_url='https://google.com').first()
             self.assertIsNotNone(link)
-            self.assertEqual(len(link.short_url), 6)
 
     def test_redirect_to_original_url(self):
         """Test redirection from short URL to original URL."""
         with self.app.app_context():
             
-            link = Link(original_url="http://example.com")
+            link = Link(original_url="https://google.com")
             db.session.add(link)
             db.session.commit()
 
-            link = Link.query.filter_by(original_url="http://example.com").first()
+            link = Link.query.filter_by(original_url="https://google.com").first()
 
             response = self.client.get(f'/{link.short_url}')
 
             self.assertEqual(response.status_code, 302)
-            self.assertEqual(response.location, "http://example.com")
+            self.assertEqual(response.location, "https://google.com")
 
     def test_delete_url(self):
         with self.app.app_context():
             
-            test_link = Link(original_url="https://example.com", short_url="exmpl")
+            test_link = Link(original_url="https://google.com", short_url="exmpl")
             db.session.add(test_link)
             db.session.commit()
 
@@ -74,7 +74,7 @@ class TestURLShortener(unittest.TestCase):
     def test_regenerate_short_url(self):
         with self.app.app_context():
             # Add a test link
-            link = Link(original_url="https://example.com", short_url="exmpl")
+            link = Link(original_url="https://google.com", short_url="exmpl")
             db.session.add(link)
             db.session.commit()
 

@@ -1,0 +1,65 @@
+<!-- Links List Section -->
+<div class="container my-4">
+    <h2 class="mb-3">URL List</h2>
+
+    <!-- Display each link as a styled paragraph -->
+    {% for link in links %}
+    <p class="bg-primary text-white p-3 rounded mb-2" style="max-width: 800px;">
+        Original URL: <a href="{{ link.original_url }}" target="_blank" class="text-light">{{ link.original_url }}</a> | 
+        Short URL: <a href="{{ url_for('shortener.redirect_to_url', short_url=link.short_url) }}" target="_blank" class="text-light">{{ link.short_url }}</a> | 
+        Views: {{ link.views }}
+    </p>
+    {% else %}
+    <p class="text-muted">No URLs have been added yet.</p>
+    {% endfor %}
+</div>
+
+<!-- Links Table Section -->
+<div class="container my-4">
+    <h2 class="mb-3">Manage URLs</h2>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Original URL</th>
+                <th>Shortened URL</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for link in links %}
+            <tr>
+                <td>
+                    <a href="{{ link.original_url }}" target="_blank">{{ link.original_url }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('shortener.redirect_to_url', short_url=link.short_url) }}" target="_blank">{{ link.short_url }}</a>
+                </td>
+                <td>
+                    <form method="POST" action="{{ url_for('shortener.delete_link', link_id=link.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">No URLs to display.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Flash Messages Section -->
+<div class="container my-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>

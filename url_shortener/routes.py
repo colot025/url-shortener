@@ -12,10 +12,10 @@ shortener = Blueprint('shortener', __name__)
 def redirect_to_url(short_url):
     link = Link.query.filter_by(short_url=short_url).first_or_404()
     if not link:
-        flash("Invalid or expired URL.", "error")
+        flash("Invalid or expired URL.", "danger")
         return redirect('/')
     if link.is_expired():
-        flash("The URL has expired.", "error")
+        flash("The URL has expired.", "danger")
         return redirect('/')
     link.views = link.views + 1
     db.session.commit()
@@ -23,19 +23,20 @@ def redirect_to_url(short_url):
 
 @shortener.route('/create_link', methods=['POST'])
 def create_link():
+       
     original_url = request.form['original_url']
     custom_id = request.form['custom_id']
  
     if not original_url:
-        flash("Original URL cannot be empty.", "error")
+        flash("Original URL cannot be empty.", "danger")
         return redirect('/')
     if not validators.url(original_url):
-        flash("Invalid URL", "error")
+        flash("Invalid URL", "danger")
         return redirect('/')
 
     if custom_id:
         if Link.query.filter_by(short_url=custom_id).first():
-            flash("Custom ID is already in use. Please choose another.", "error")
+            flash("Custom ID is already in use. Please choose another.", "danger")
             return redirect('/')
         short_url = custom_id
     else:
@@ -54,13 +55,14 @@ def regenerate_url():
     original_url = request.form.get('original_url')
 
     if not original_url:
-        return render_template('link_error.html', error_message="Original URL is required"), 400
+        flash("Original URL cannot be empty.", "danger")
+        return redirect('/')
 
     # Check if the URL exists in the database
     link = Link.query.filter_by(original_url=original_url).first()
 
     if not link:
-        return render_template('link_error.html', error_message="URL not found"), 404
+        return page_not_found(404)
 
     # Regenerate the short URL
     link.short_url = link.generate_short_link()
@@ -76,10 +78,9 @@ def delete_link(link_id):
         db.session.delete(link)
         db.session.commit()
         flash("Short URL successfully removed.", "success")
-        #return redirect('/analytics')
     else:
-        flash("Short URL not found.", "error")
-    #return redirect(url_for('shortener.index'))
+        flash("Short URL not found.", "danger")
+    
     return redirect('/analytics')
 
 @shortener.route('/')

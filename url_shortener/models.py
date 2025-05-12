@@ -6,7 +6,7 @@ from random import choices
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     original_url = db.Column(db.String(1024), nullable=False)
-    short_url = db.Column(db.String(6), nullable=False,unique=True)
+    short_url = db.Column(db.String(20), nullable=False,unique=True)
     views = db.Column(db.Integer, default=0)
     date_created = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     expiration_days = db.Column(db.Integer, default=30)
@@ -23,14 +23,10 @@ class Link(db.Model):
         characters = string.digits + string.ascii_letters
         short_url = ''.join(choices(characters, k=6))
 
-        """ link = self.query.filter_by(short_url=short_url).first()
+        link = self.query.filter_by(short_url=short_url).first()
         if link:
-            return self.generate_short_link() """
+            return self.generate_short_link()
     
-        # Ensure uniqueness by querying the database
-        while self.query.filter_by(short_url=short_url).first():
-            short_url = ''.join(choices(characters, k=6))
-
         return short_url
     
     def is_expired(self):

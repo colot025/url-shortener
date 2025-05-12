@@ -36,6 +36,12 @@ A simple URL shortener built with Flask that allows users to shorten long URLs a
 5. **Use the App to Shorten URLs**:
    - Type or paste the link you want to shorten in the "Original URL" field and then click "Submit" to generate your shorten url.
    - If you would like to use a create a custom name for the shorten url, add a custom short ID and click "Submit".
+   - After generating a shortened URL, click the **View Analytics** button.
+   - You will be redirected to a page displaying:
+      - Total views count.
+   - Click the **Regenerate Link** button for an existing shortened URL.
+   - The application will generate a new shortened URL for the same original link.
+   - Use the new link as needed.
 
 ---
 
@@ -63,6 +69,12 @@ A simple URL shortener built with Flask that allows users to shorten long URLs a
 5. **Use the App to Shorten URLs**:
    - Type or paste the link you want to shorten in the "Original   URL" field and then click "Submit" to generate your shorten url.
    - If you would like to use a create a custom name for the shorten url, add a custom short ID and click "Submit".
+   - After generating a shortened URL, click the **View Analytics** button.
+   - You will be redirected to a page displaying:
+      - Total views count.
+   - Click the **Regenerate Link** button for an existing shortened URL.
+   - The application will generate a new shortened URL for the same original link.
+   - Use the new link as needed.
 
 ---
 
@@ -88,6 +100,16 @@ Ensure all tests pass before deployment.
    docker logs url-shortener
    ```
 
+## Resources
 
+The following resources were utilized in the development of this project:
+
+- [Flask Documentation](https://flask.palletsprojects.com/) - Official documentation for Flask, used as the core web framework.
+- [Bootstrap Documentation](https://getbootstrap.com/docs/5.3/) - Used for styling the front-end UI components.
+- [SQLAlchemy Documentation](https://docs.sqlalchemy.org/) - For database interactions and ORM.
+- [Docker Documentation](https://docs.docker.com/) - Referenced for containerization setup and deployment.
+- [Python 3.9 Documentation](https://docs.python.org/3.9/) - To reference Python's standard library and syntax.
+- [unittest.TestCase.debug](https://docs.python.org/3/library/unittest.html#unittest.TestCase.debug) - For debugging unit tests in Python.
+- Various Stack Overflow discussions and Q&A for resolving specific coding challenges.
 
 

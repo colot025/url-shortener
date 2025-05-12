@@ -21,13 +21,10 @@ class Link(db.Model):
 
     def generate_short_link(self):
         characters = string.digits + string.ascii_letters
-        short_url = ''.join(choices(characters, k=6))
-
-        link = self.query.filter_by(short_url=short_url).first()
-        if link:
-            return self.generate_short_link()
-    
-        return short_url
+        while True:
+            short_url = ''.join(choices(characters, k=6))
+            if not self.query.filter_by(short_url=short_url).first():
+                return short_url
     
     def is_expired(self):
         if not self.date_created or self.expiration_days:
